@@ -8,6 +8,6 @@ public interface Plugin {
 	
 	public boolean onEnable() ;
 	
-	public HttpServletResponse getResponse(HttpServletRequest request) ;
+	public HttpServletResponse getResponse(HttpServletRequest request , HttpServletResponse response) ;
 	
 }
