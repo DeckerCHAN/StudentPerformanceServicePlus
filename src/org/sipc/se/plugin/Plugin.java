@@ -1,9 +1,13 @@
 package org.sipc.se.plugin;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface Plugin {
 	
-	public void getURL() ;
+	public String getURL() ;
 	
-	public void onEnable() ;
+	public boolean onEnable() ;
+	
+	public HttpServletResponse getResponse() ;
 	
 }
