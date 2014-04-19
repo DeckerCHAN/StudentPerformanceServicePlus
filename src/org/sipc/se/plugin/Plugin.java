@@ -9,6 +9,6 @@ public interface Plugin {
 	
 	public boolean onEnable() ;
 	
-	public HttpServletResponse getResponse(HttpServletRequest request , HttpServletResponse response) ;
+	public void getResponse(HttpServletRequest request , HttpServletResponse response) ;
 	
 }
