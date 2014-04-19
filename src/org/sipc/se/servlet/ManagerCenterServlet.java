@@ -20,6 +20,9 @@ public class ManagerCenterServlet extends HttpServlet {
      */
     public ManagerCenterServlet() {
         // TODO Auto-generated constructor stub
+    	System.out.println("SERVER START\n===================");
+    	this.loadAllPlugin() ;
+    	this.checkDBInfo() ;
     }
 
 	/**
@@ -35,7 +38,22 @@ public class ManagerCenterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println(num++) ;
+		System.out.println("TIME : " + (num++) + " £¬ PATH : " + request.getPathInfo() ) ;
 	}
-
+	
+	public void loadAllPlugin(){
+		
+	}
+	
+	public void checkDBInfo(){
+	
+	}
+	
+	public void getServer(){
+		
+	}
+	
+	public void routerURL(){
+		
+	}
 }
