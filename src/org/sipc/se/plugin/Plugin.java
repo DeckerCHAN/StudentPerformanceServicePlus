@@ -1,4 +1,4 @@
-package ogr.sipc.se.plugin;
+package org.sipc.se.plugin;
 
 public interface Plugin {
 	
