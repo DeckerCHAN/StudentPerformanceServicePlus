@@ -1,11 +1,25 @@
 package org.sipc.se.servlet;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.sipc.se.plugin.Plugin;
+import org.sipc.se.util.StaticValue;
+
 
 
 /**
@@ -13,17 +27,35 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/LoginServlet")
 public class ManagerCenterServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 	private static int num = 0;
+	private static final long serialVersionUID = 1L;
+	private List<Plugin> pluginList = new ArrayList<Plugin>() ;
+	
     /**
      * Default constructor. 
+     * @throws IOException 
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
+     * @throws ClassNotFoundException 
      */
-    public ManagerCenterServlet() {
+	
+    public ManagerCenterServlet() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         // TODO Auto-generated constructor stub
-    	System.out.println("SERVER START\n===================");
-    	this.loadAllPlugin() ;
-    	this.checkDBInfo() ;
+    	
     }
+
+	@Override
+	public void init(ServletConfig config) { 
+		// TODO Auto-generated method stub
+		
+		try {
+			this.loadAllPlugin(config) ;
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | IOException e) {
+			e.printStackTrace();
+		}
+    	this.checkDBInfo() ;
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,11 +70,55 @@ public class ManagerCenterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("TIME : " + (num++) + " £¬ PATH : " + request.getPathInfo() ) ;
+		System.out.println("TIME : " + (num++) + " , PATH : " + request.getPathInfo() ) ;
+		routerURL(request.getPathInfo()) ;
 	}
 	
-	public void loadAllPlugin(){
+	/**
+	 * loadALLPlugin
+	 * @param config
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public void loadAllPlugin(ServletConfig config) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		
+		File fileList = new File(config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE)) ;
+		
+		//print on console
+		System.out.println(fileList.getCanonicalPath());
+		System.out.println(fileList.exists());
+		
+		//foreach all jar file
+		for(String fileName : fileList.list() ){
+			
+			//Read yml which is in Jar file bn
+			String className = null ;
+			JarFile  jarFile = new JarFile ( config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE) + "/" + fileName) ;
+			JarEntry jarEntry = jarFile.getJarEntry( StaticValue.JAR_YMLFILE ) ;
+			
+			// read .yml file
+			InputStream input = jarFile.getInputStream(jarEntry) ;
+			InputStreamReader inputReader = new InputStreamReader(input) ;
+			BufferedReader reader = new BufferedReader(inputReader) ;
+			String line = null ;
+			while((line = reader.readLine() ) != null){
+				if(line.contains("package")){
+					className = line.split(":")[1].trim() ;
+				}
+			}
+			//close readstream
+			reader.close() ;
+			jarFile.close() ;
+			
+			//load Plugin instance
+			System.out.println(className) ;
+			Plugin plugin = (Plugin)Class.forName(className).newInstance() ;
+			if(plugin.onEnable()){
+				pluginList.add(plugin) ;
+			}
+		}
 	}
 	
 	public void checkDBInfo(){
@@ -53,7 +129,12 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 	}
 	
-	public void routerURL(){
-		
+	public void routerURL(String path){
+		for(Plugin plugin : pluginList){
+			if(path.equals(plugin.getUrl())){
+				//get the plgin object 
+				
+			}
+		}
 	}
 }

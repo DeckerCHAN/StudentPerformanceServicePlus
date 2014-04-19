@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface Plugin {
 	
-	public String getURL() ;
+	public String getUrl() ;
 	
 	public boolean onEnable() ;
 	
