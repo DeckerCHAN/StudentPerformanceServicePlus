@@ -63,6 +63,7 @@ public class ManagerCenterServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		this.doPost(request, response) ;
+		
 	}
 
 	/**
@@ -130,10 +131,15 @@ public class ManagerCenterServlet extends HttpServlet {
 	}
 	
 	public void routerURL(String path){
-		for(Plugin plugin : pluginList){
-			if(path.equals(plugin.getUrl())){
-				//get the plgin object 
-				
+		System.out.println(path) ;
+		if(path.equals("/") || path.equals("/*")){
+			
+		}else{
+			for(Plugin plugin : pluginList){
+				if(path.split("/")[1].equals(plugin.getUrl())){
+					//get the plgin object 
+					System.out.println(path.split("/")[1]) ;
+				}
 			}
 		}
 	}
