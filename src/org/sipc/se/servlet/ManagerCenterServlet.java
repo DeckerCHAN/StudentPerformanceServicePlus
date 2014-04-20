@@ -1,14 +1,8 @@
 package org.sipc.se.servlet;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.sipc.se.plugin.Plugin;
+import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
 
 
@@ -27,7 +22,7 @@ import org.sipc.se.util.StaticValue;
  */
 @WebServlet("/LoginServlet")
 public class ManagerCenterServlet extends HttpServlet {
-	private static int num = 0;
+	
 	private static final long serialVersionUID = 1L;
 	private List<Plugin> pluginList = new ArrayList<Plugin>() ;
 	
@@ -50,11 +45,11 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		try {
 			this.loadAllPlugin(config) ;
+			this.checkDBInfo() ;
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | IOException e) {
 			e.printStackTrace();
 		}
-    	this.checkDBInfo() ;
 	}
 
 	/**
@@ -71,9 +66,10 @@ public class ManagerCenterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//SetEncode
 		request.setCharacterEncoding("utf-8") ;
 		response.setCharacterEncoding("utf-8") ;
-		System.out.println("TIME : " + (num++) + " , PATH : " + request.getPathInfo() ) ;
+
 		routerURL(request.getPathInfo() , request , response ) ;
 	}
 	
@@ -85,64 +81,51 @@ public class ManagerCenterServlet extends HttpServlet {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public void loadAllPlugin(ServletConfig config) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
+	protected void loadAllPlugin(ServletConfig config) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		
-		File fileList = new File(config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE)) ;
-		
-		//print on console
-		System.out.println(fileList.getCanonicalPath());
-		System.out.println(fileList.exists());
-		
-		//foreach all jar file
-		for(String fileName : fileList.list() ){
+		pluginList = JarFileContent.getPluginList(config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE)) ;
 			
-			//Read yml which is in Jar file bn
-			String className = null ;
-			JarFile  jarFile = new JarFile ( config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE) + "/" + fileName) ;
-			JarEntry jarEntry = jarFile.getJarEntry( StaticValue.JAR_YMLFILE ) ;
-			
-			// read .yml file
-			InputStream input = jarFile.getInputStream(jarEntry) ;
-			InputStreamReader inputReader = new InputStreamReader(input) ;
-			BufferedReader reader = new BufferedReader(inputReader) ;
-			String line = null ;
-			while((line = reader.readLine() ) != null){
-				if(line.contains("package")){
-					className = line.split(":")[1].trim() ;
+	}
+	
+	/**
+	 * The function to route URL . Need requestPath , httpRequest , httpRespnose 
+	 * It can turn into each section which the url are needed. 
+	 * @param path
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	
+	protected void routerURL(String path , HttpServletRequest request , HttpServletResponse response) throws IOException{
+		
+		boolean isFindURL = false ;
+		//Print Request Path On Console
+		System.out.println(path) ;
+		
+		//First Page
+		if(path.equals("/") || path.equals("/*")){
+			response.getWriter().print("First Page!!") ;
+			isFindURL = true ;
+		}else{
+			//Router
+			for(Plugin plugin : pluginList){
+				if(path.split("/")[1].equals(plugin.getUrl())){
+					//Get The Plgin Object 
+					plugin.getResponse(request, response) ;
+					isFindURL = true ;
 				}
 			}
-			//close readstream
-			reader.close() ;
-			jarFile.close() ;
-			
-			//load Plugin instance
-			System.out.println(className) ;
-			Plugin plugin = (Plugin)Class.forName(className).newInstance() ;
-			if(plugin.onEnable()){
-				pluginList.add(plugin) ;
-			}
+		}
+		if(!isFindURL){
+			response.getWriter().print("<h2>Error page !</h2><h1>Please Check URL!</h1>") ;
 		}
 	}
 	
 	public void checkDBInfo(){
-	
+		
 	}
 	
 	public void getServer(){
 		
-	}
-	
-	public void routerURL(String path , HttpServletRequest request , HttpServletResponse response) throws IOException{
-		System.out.println(path) ;
-		if(path.equals("/") || path.equals("/*")){
-			response.getWriter().print("First Page!!") ;
-		}else{
-			for(Plugin plugin : pluginList){
-				if(path.split("/")[1].equals(plugin.getUrl())){
-					//get the plgin object 
-					plugin.getResponse(request, response) ;
-				}
-			}
-		}
 	}
 }
