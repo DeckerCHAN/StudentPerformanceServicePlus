@@ -71,8 +71,10 @@ public class ManagerCenterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8") ;
+		response.setCharacterEncoding("utf-8") ;
 		System.out.println("TIME : " + (num++) + " , PATH : " + request.getPathInfo() ) ;
-		routerURL(request.getPathInfo()) ;
+		routerURL(request.getPathInfo() , request , response ) ;
 	}
 	
 	/**
@@ -130,15 +132,15 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 	}
 	
-	public void routerURL(String path){
+	public void routerURL(String path , HttpServletRequest request , HttpServletResponse response) throws IOException{
 		System.out.println(path) ;
 		if(path.equals("/") || path.equals("/*")){
-			
+			response.getWriter().print("First Page!!") ;
 		}else{
 			for(Plugin plugin : pluginList){
 				if(path.split("/")[1].equals(plugin.getUrl())){
 					//get the plgin object 
-					System.out.println(path.split("/")[1]) ;
+					plugin.getResponse(request, response) ;
 				}
 			}
 		}
