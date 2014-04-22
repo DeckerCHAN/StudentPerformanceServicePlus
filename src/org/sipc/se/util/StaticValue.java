@@ -6,4 +6,5 @@ public class StaticValue {
 	
 	public static final String JAR_YMLFILE = "Plugin.yml" ;
 	
+	
 }

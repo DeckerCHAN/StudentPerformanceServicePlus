@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.sipc.se.dbc.DataBaseConnection;
 import org.sipc.se.plugin.Plugin;
 import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
@@ -45,7 +46,7 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		try {
 			this.loadAllPlugin(config) ;
-			this.checkDBInfo() ;
+			this.checkDBInfo(config) ;
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | IOException e) {
 			e.printStackTrace();
@@ -107,6 +108,7 @@ public class ManagerCenterServlet extends HttpServlet {
 			response.getWriter().print("First Page!!") ;
 			isFindURL = true ;
 		}else{
+			
 			//Router
 			for(Plugin plugin : pluginList){
 				if(path.split("/")[1].equals(plugin.getUrl())){
@@ -121,8 +123,19 @@ public class ManagerCenterServlet extends HttpServlet {
 		}
 	}
 	
-	public void checkDBInfo(){
+	public void checkDBInfo(ServletConfig config) throws IOException{
 		
+		DataBaseConnection db = new DataBaseConnection(config.getServletContext().getRealPath("/")) ;
+		if(!db.checkDataBaseDriver()){
+			System.out.println("请查看数据库驱动程序!") ;
+		}else
+		{
+			if(!db.checkDataBaseConnection()){
+				System.out.println("数据库未能连接，查看配置文件是否正确!") ;
+			}else{
+				System.out.println("数据库连接成功") ;
+			}
+		}
 	}
 	
 	public void getServer(){
