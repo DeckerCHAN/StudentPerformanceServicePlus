@@ -10,9 +10,13 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sipc.se.plugin.Plugin;
 
 public class JarFileContent {
+	
+	static Logger log = LogManager.getLogger(JarFileContent.class.getName()) ;
 	
 	public static File findJarFile(String filePath) throws IOException{
 		
@@ -66,13 +70,18 @@ public class JarFileContent {
 		
 		for(String fileName : fileList.list() ){
 			
+			log.info("Plugin Name : " + fileName) ;
 			String className = getYMLConfig(filePath + "/" + fileName ) ;
+			
+			//Write log file
+			log.info("Package.ClassName : " + className ) ;
 			
 			//Load Plugin Instance
 			Plugin plugin = JarFileLoad.jarFileLoad( filePath, fileName , className) ;
 			
 			//Add All Plugin Into List
 			if( plugin.onEnable() ) {
+				
 				pluginList.add(plugin) ;
 			}
 		}

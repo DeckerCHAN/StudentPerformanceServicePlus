@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+  <appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+    </Console>
+    <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="logs/StudentPerformancePlus.log"
+                 filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="250 MB"/>
+      </Policies>
+    </RollingRandomAccessFile>
+  </appenders>
+  <loggers>
+    <root level="info">
+  	  <appender-ref ref="RollingRandomAccessFile" levle="info"/>
+      <appender-ref ref="Console" levle="info"/>
+    </root>
+  </loggers>
+</configuration>

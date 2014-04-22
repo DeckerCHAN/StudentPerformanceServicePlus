@@ -11,11 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sipc.se.dbc.DataBaseConnection;
 import org.sipc.se.plugin.Plugin;
 import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
-
 
 
 /**
@@ -26,6 +27,7 @@ public class ManagerCenterServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private List<Plugin> pluginList = new ArrayList<Plugin>() ;
+	static Logger log = LogManager.getLogger(ManagerCenterServlet.class.getName()) ;
 	
     /**
      * Default constructor. 
@@ -67,10 +69,16 @@ public class ManagerCenterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		//Set Into Log
+		log.info("PATH : " + request.getPathInfo()) ;
+		log.info("IP : " + request.getRemoteAddr()) ;
+		
 		//SetEncode
 		request.setCharacterEncoding("utf-8") ;
 		response.setCharacterEncoding("utf-8") ;
-
+		
+		
 		routerURL(request.getPathInfo() , request , response ) ;
 	}
 	
@@ -101,8 +109,7 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		boolean isFindURL = false ;
 		//Print Request Path On Console
-		System.out.println(path) ;
-		
+		System.out.println(path) ; 
 		//First Page
 		if(path.equals("/") || path.equals("/*")){
 			response.getWriter().print("First Page!!") ;
@@ -119,7 +126,7 @@ public class ManagerCenterServlet extends HttpServlet {
 			}
 		}
 		if(!isFindURL){
-			response.getWriter().print("<h2>Error page !</h2><h1>Please Check URL!</h1>") ;
+			response.getWriter().print("Please Check URL!") ;
 		}
 	}
 	
@@ -127,13 +134,13 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		DataBaseConnection db = new DataBaseConnection(config.getServletContext().getRealPath("/")) ;
 		if(!db.checkDataBaseDriver()){
-			System.out.println("请查看数据库驱动程序!") ;
+			log.info("请查看数据库驱动程序！") ;
 		}else
 		{
 			if(!db.checkDataBaseConnection()){
-				System.out.println("数据库未能连接，查看配置文件是否正确!") ;
+				log.info("数据库未能连接，查看配置文件是否正确!") ;
 			}else{
-				System.out.println("数据库连接成功") ;
+				log.info("数据库连接成功!") ;
 			}
 		}
 	}
