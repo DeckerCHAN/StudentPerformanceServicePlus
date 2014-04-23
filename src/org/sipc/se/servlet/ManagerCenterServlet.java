@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sipc.se.dbc.DataBaseConnection;
 import org.sipc.se.plugin.Plugin;
+import org.sipc.se.plugin.PluginImpl;
 import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
 
@@ -27,7 +28,7 @@ public class ManagerCenterServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private List<Plugin> pluginList = new ArrayList<Plugin>() ;
-	static Logger log = LogManager.getLogger(ManagerCenterServlet.class.getName()) ;
+	static Logger log = LogManager.getLogger() ;
 	
     /**
      * Default constructor. 
@@ -61,6 +62,27 @@ public class ManagerCenterServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		this.doPost(request, response) ;
+		new PluginImpl() {
+			
+			@Override
+			public boolean onEnable() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public String getUrl() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void getResponse(HttpServletRequest request,
+					HttpServletResponse response) {
+				// TODO Auto-generated method stub
+				
+			}
+		}.toString();
 		
 	}
 
