@@ -11,5 +11,4 @@ public interface Plugin {
 	
 	public void getResponse(HttpServletRequest request , HttpServletResponse response) ;
 	
-	
 }

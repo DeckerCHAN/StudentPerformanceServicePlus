@@ -2,32 +2,30 @@ package org.sipc.se.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.List; 
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse; 
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sipc.se.dbc.DataBaseConnection;
-import org.sipc.se.plugin.Plugin;
 import org.sipc.se.plugin.PluginImpl;
 import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
 
 
-/**
+/** 
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")
 public class ManagerCenterServlet extends HttpServlet {
 	
-	private static final long serialVersionUID = 1L;
-	private List<Plugin> pluginList = new ArrayList<Plugin>() ;
+	private static final long serialVersionUID = 1L; 
+	private List<PluginImpl> pluginList = new ArrayList<PluginImpl>() ;
 	static Logger log = LogManager.getLogger() ;
 	
     /**
@@ -40,7 +38,7 @@ public class ManagerCenterServlet extends HttpServlet {
 	
     public ManagerCenterServlet() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         // TODO Auto-generated constructor stub
-    	
+ 
     }
 
 	@Override
@@ -51,7 +49,7 @@ public class ManagerCenterServlet extends HttpServlet {
 			this.loadAllPlugin(config) ;
 			this.checkDBInfo(config) ;
 		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | IOException e) {
+				 | IllegalAccessException | IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -62,27 +60,6 @@ public class ManagerCenterServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		this.doPost(request, response) ;
-		new PluginImpl() {
-			
-			@Override
-			public boolean onEnable() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public String getUrl() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public void getResponse(HttpServletRequest request,
-					HttpServletResponse response) {
-				// TODO Auto-generated method stub
-				
-			}
-		}.toString();
 		
 	}
 
@@ -100,7 +77,6 @@ public class ManagerCenterServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8") ;
 		response.setCharacterEncoding("utf-8") ;
 		
-		
 		routerURL(request.getPathInfo() , request , response ) ;
 	}
 	
@@ -115,7 +91,9 @@ public class ManagerCenterServlet extends HttpServlet {
 	protected void loadAllPlugin(ServletConfig config) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		
 		pluginList = JarFileContent.getPluginList(config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE)) ;
-			
+		
+		//Sort allPlugin list
+		Collections.sort(pluginList) ;
 	}
 	
 	/**
@@ -131,7 +109,7 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		boolean isFindURL = false ;
 		//Print Request Path On Console
-		System.out.println(path) ; 
+
 		//First Page
 		if(path.equals("/") || path.equals("/*")){
 			response.getWriter().print("First Page!!") ;
@@ -139,7 +117,7 @@ public class ManagerCenterServlet extends HttpServlet {
 		}else{
 			
 			//Router
-			for(Plugin plugin : pluginList){
+			for(PluginImpl plugin : pluginList){
 				if(path.split("/")[1].equals(plugin.getUrl())){
 					//Get The Plgin Object 
 					plugin.getResponse(request, response) ;

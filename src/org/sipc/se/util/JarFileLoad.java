@@ -4,9 +4,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.sipc.se.plugin.Plugin;
+import org.sipc.se.plugin.PluginImpl;
 
-
+ 
 class JarLoader extends URLClassLoader {
 	
 	private static JarLoader loader = null;
@@ -28,7 +28,7 @@ class JarLoader extends URLClassLoader {
 
 public class JarFileLoad{
 	
-	public static Plugin jarFileLoad(String pluginPath , String plginName , String classFullName) throws MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	public static PluginImpl jarFileLoad(String pluginPath , String plginName , String classFullName) throws MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		
 		JarLoader loader = JarLoader.getInstance();
 		
@@ -37,7 +37,7 @@ public class JarFileLoad{
 		//New Instance
 		
 		try{
-			Plugin plugin = (Plugin)Class.forName( classFullName , true, loader).newInstance();
+			PluginImpl plugin = (PluginImpl)Class.forName( classFullName , true, loader).newInstance();
 			return plugin ;
 		}catch(Exception e){
 			return null ;

@@ -12,18 +12,18 @@ import java.util.jar.JarFile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.sipc.se.plugin.Plugin;
+import org.sipc.se.plugin.PluginImpl;
 
-public class JarFileContent {
+public class JarFileContent { 
 	
 	static Logger log = LogManager.getLogger(JarFileContent.class.getName()) ;
 	
 	public static File findJarFile(String filePath) throws IOException{
 		
 		File fileList = new File(filePath) ;
-		
+		 
 		if(fileList.exists())
-		{
+		{ 
 			return fileList ;
 		}
 		
@@ -63,10 +63,10 @@ public class JarFileContent {
 		
 	}
 	
-	public static List<Plugin> getPluginList(String filePath) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	public static List<PluginImpl> getPluginList(String filePath) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		
 		File fileList = findJarFile(filePath) ;
-		List<Plugin> pluginList = new ArrayList<Plugin>() ;
+		List<PluginImpl> pluginList = new ArrayList<PluginImpl>() ;
 		
 		for(String fileName : fileList.list() ){
 			
@@ -77,7 +77,7 @@ public class JarFileContent {
 			log.info("Package.ClassName : " + className ) ;
 			
 			//Load Plugin Instance
-			Plugin plugin = JarFileLoad.jarFileLoad( filePath, fileName , className) ;
+			PluginImpl plugin = JarFileLoad.jarFileLoad( filePath, fileName , className) ;
 			
 			//Add All Plugin Into List
 			if( plugin.onEnable() ) {

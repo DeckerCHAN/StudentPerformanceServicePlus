@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import org.sipc.se.util.PropertiesFileLoad;
 
-public class DataBaseConnection {
+public class DataBaseConnection { 
 	
 	private static String DBDRIVER = null ;
 	private static String DBURL = null ;
