@@ -30,8 +30,8 @@ public class ManagerCenterServlet extends HttpServlet {
 	static Logger log = LogManager.getLogger() ;
 	
     /**
-     * Default constructor. 
-     * @throws IOException 
+     * Default constructor.   
+     * @throws IOException 	
      * @throws IllegalAccessException 
      * @throws InstantiationException 
      * @throws ClassNotFoundException 
@@ -122,7 +122,7 @@ public class ManagerCenterServlet extends HttpServlet {
 			if(plugin != null){
 				plugin.getResponse(request, response) ;
 			}else{
-				response.getWriter().print("Please Check URL!") ;
+				response.sendError(404) ;
 			}
 			
 		}
