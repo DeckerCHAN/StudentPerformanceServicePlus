@@ -1,9 +1,7 @@
 package org.sipc.se.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List; 
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,10 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.sipc.se.bean.PluginTree;
+import org.sipc.se.dao.factory.OperateFactory;
 import org.sipc.se.dbc.DataBaseConnection;
 import org.sipc.se.plugin.PluginImpl;
 import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
+import org.sipc.se.util.TreeCollections;
 
 
 /** 
@@ -25,7 +26,7 @@ import org.sipc.se.util.StaticValue;
 public class ManagerCenterServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L; 
-	private List<PluginImpl> pluginList = new ArrayList<PluginImpl>() ;
+	private Map<String,PluginImpl> pluginList = null ;
 	static Logger log = LogManager.getLogger() ;
 	
     /**
@@ -40,7 +41,7 @@ public class ManagerCenterServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
  
     }
-
+ 
 	@Override
 	public void init(ServletConfig config) { 
 		// TODO Auto-generated method stub
@@ -48,6 +49,7 @@ public class ManagerCenterServlet extends HttpServlet {
 		try {
 			this.loadAllPlugin(config) ;
 			this.checkDBInfo(config) ;
+			this.getServer();
 		} catch (ClassNotFoundException | InstantiationException
 				 | IllegalAccessException | IOException e) {
 			e.printStackTrace();
@@ -93,7 +95,10 @@ public class ManagerCenterServlet extends HttpServlet {
 		pluginList = JarFileContent.getPluginList(config.getServletContext().getRealPath(StaticValue.CENTER_FILEPATH_VALUE)) ;
 		
 		//Sort allPlugin list
-		Collections.sort(pluginList) ;
+
+		boolean isERROR = TreeCollections.initTree(pluginList) ;
+		
+		log.info("Plugin加载情况： " + isERROR) ;
 	}
 	
 	/**
@@ -107,26 +112,19 @@ public class ManagerCenterServlet extends HttpServlet {
 	
 	protected void routerURL(String path , HttpServletRequest request , HttpServletResponse response) throws IOException{
 		
-		boolean isFindURL = false ;
-		//Print Request Path On Console
-
 		//First Page
 		if(path.equals("/") || path.equals("/*")){
 			response.getWriter().print("First Page!!") ;
-			isFindURL = true ;
 		}else{
 			
 			//Router
-			for(PluginImpl plugin : pluginList){
-				if(path.split("/")[1].equals(plugin.getUrl())){
-					//Get The Plgin Object 
-					plugin.getResponse(request, response) ;
-					isFindURL = true ;
-				}
+			PluginImpl plugin = PluginTree.getInstance().getPluginByPath(path) ;
+			if(plugin != null){
+				plugin.getResponse(request, response) ;
+			}else{
+				response.getWriter().print("Please Check URL!") ;
 			}
-		}
-		if(!isFindURL){
-			response.getWriter().print("Please Check URL!") ;
+			
 		}
 	}
 	
@@ -143,9 +141,11 @@ public class ManagerCenterServlet extends HttpServlet {
 				log.info("数据库连接成功!") ;
 			}
 		}
+		db.closeConnection() ;
 	}
 	
 	public void getServer(){
-		
+		OperateFactory factory = OperateFactory.getInstance() ;
+		factory.initMap(pluginList) ;
 	}
 }

@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -19,9 +19,7 @@ public class JarFileContent {
 	static Logger log = LogManager.getLogger(JarFileContent.class.getName()) ;
 	
 	public static File findJarFile(String filePath) throws IOException{
-		
 		File fileList = new File(filePath) ;
-		 
 		if(fileList.exists())
 		{ 
 			return fileList ;
@@ -37,8 +35,10 @@ public class JarFileContent {
 		
 	}	
 	
-	public static String getYMLConfig(String fileName) throws IOException{
-		String className = null ;
+	public static String[] getYMLConfig(String fileName) throws IOException{
+		
+		String[] str = new String[2] ;
+		
 		JarFile  jarFile = new JarFile (fileName) ;
 		JarEntry jarEntry = jarFile.getJarEntry( StaticValue.JAR_YMLFILE ) ;
 		
@@ -50,8 +50,11 @@ public class JarFileContent {
 		//Read
 		String line = null ;
 		while((line = reader.readLine() ) != null){
+			if(line.contains("name")){
+				str[0] = line.split(":")[1].trim() ;
+			}
 			if(line.contains("package")){
-				className = line.split(":")[1].trim() ;
+				str[1] = line.split(":")[1].trim() ;
 			}
 		}
 		
@@ -59,31 +62,25 @@ public class JarFileContent {
 		reader.close() ;
 		jarFile.close() ;
 		
-		return className ;
+		return str ;
 		
 	}
 	
-	public static List<PluginImpl> getPluginList(String filePath) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	public static Map<String,PluginImpl> getPluginList(String filePath) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		
 		File fileList = findJarFile(filePath) ;
-		List<PluginImpl> pluginList = new ArrayList<PluginImpl>() ;
+		Map<String,PluginImpl> pluginList = new HashMap<String,PluginImpl>() ;
 		
 		for(String fileName : fileList.list() ){
 			
-			log.info("Plugin Name : " + fileName) ;
-			String className = getYMLConfig(filePath + "/" + fileName ) ;
 			
-			//Write log file
-			log.info("Package.ClassName : " + className ) ;
-			
+			String[] ymlContent = getYMLConfig(filePath + "/" + fileName ) ;
+			log.info("Plugin Name : " + ymlContent[0] ) ;
 			//Load Plugin Instance
-			PluginImpl plugin = JarFileLoad.jarFileLoad( filePath, fileName , className) ;
+			PluginImpl plugin = JarFileLoad.jarFileLoad( filePath, fileName , ymlContent[1]) ;
 			
 			//Add All Plugin Into List
-			if( plugin.onEnable() ) {
-				
-				pluginList.add(plugin) ;
-			}
+			pluginList.put(ymlContent[0] , plugin) ;
 		}
 		return pluginList ;
 	}

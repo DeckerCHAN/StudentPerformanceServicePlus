@@ -30,6 +30,11 @@ public class DataBaseConnection {
 		getDataBaseInfo(path) ;
 	}
 	
+	public DataBaseConnection(){
+		checkDataBaseDriver() ;
+		checkDataBaseConnection() ;
+	}
+	
 	public Connection getConnection(){
 		return this.conn ;
 	}

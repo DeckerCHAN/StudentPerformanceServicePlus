@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>StudentPerformanceServicePlus</groupId>
-  <artifactId>StudentPerformanceServicePlus</artifactId>
+  <groupId>StudentPerformanceMaven</groupId>
+  <artifactId>StudentPerformanceMaven</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   
-  <name>StudentPerformanceServicePlus</name>
+  <name>StudentPerformanceMaven</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -47,7 +47,18 @@
   </dependencies>
   
   <build>
+  	<finalName>StudentPerformanceMaven</finalName>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <outputDirectory>src/main/WebRoot/WEB-INF/classes
+    </outputDirectory>
   	<plugins>
+  		<plugin>
+              <artifactId>maven-war-plugin</artifactId>
+              <configuration>
+                  <webappDirectory>target/StudentPerformanceMaven</webappDirectory>
+          	      <warSourceDirectory>src/main/WebRoot</warSourceDirectory>
+              </configuration>
+        </plugin>
         <plugin>  
         	<groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>  
@@ -59,7 +70,6 @@
  		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-war-plugin</artifactId>
-			<version>2.1.1</version>
 			<configuration>
 				<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
 			</configuration>
