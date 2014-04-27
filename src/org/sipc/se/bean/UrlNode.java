@@ -73,6 +73,8 @@ public class UrlNode {
 					PluginImpl pluginImpl = node.getByPath(url, n+1) ;
 					if( pluginImpl != null) 
 						return pluginImpl ;
+					else 
+						return node.pluginNode ;
 				}
 			}
 		}
