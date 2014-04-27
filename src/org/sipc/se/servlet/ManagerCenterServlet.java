@@ -124,7 +124,6 @@ public class ManagerCenterServlet extends HttpServlet {
 			}else{
 				response.sendError(404) ;
 			}
-			
 		}
 	}
 	
