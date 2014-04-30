@@ -77,7 +77,9 @@ public class JarFileContent {
 			String[] ymlContent = getYMLConfig(filePath + "/" + fileName ) ;
 			log.info("Plugin Name : " + ymlContent[0] ) ;
 			//Load Plugin Instance
+			
 			PluginImpl plugin = JarFileLoad.jarFileLoad( filePath, fileName , ymlContent[1]) ;
+			plugin.setMap(pluginList) ;
 			
 			//Add All Plugin Into List
 			pluginList.put(ymlContent[0] , plugin) ;
