@@ -72,9 +72,8 @@ public class ManagerCenterServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		//Set Into Log
-		log.info("PATH : " + request.getPathInfo()) ;
-		log.info("IP : " + request.getRemoteAddr()) ;
-		
+		//log.info(request.getRemoteAddr()+">>"+request.getPathInfo()) ;
+	    	log.info(String.format("[REQUEST] %s:%d>>%s",request.getRemoteAddr(),request.getRemotePort(),request.getPathInfo()));
 		//SetEncode
 		request.setCharacterEncoding("utf-8") ;
 		response.setCharacterEncoding("utf-8") ;
