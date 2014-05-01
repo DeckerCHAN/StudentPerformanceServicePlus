@@ -72,8 +72,8 @@ public class ManagerCenterServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		//Set Into Log
-		//log.info(request.getRemoteAddr()+">>"+request.getPathInfo()) ;
-	    	log.info(String.format("[REQUEST] %s:%d>>%s",request.getRemoteAddr(),request.getRemotePort(),request.getPathInfo()));
+	    log.info(String.format("[REQUEST] %s:%d>>%s",request.getRemoteAddr(),request.getRemotePort(),request.getPathInfo()));
+	    	
 		//SetEncode
 		request.setCharacterEncoding("utf-8") ;
 		response.setCharacterEncoding("utf-8") ;
@@ -97,7 +97,7 @@ public class ManagerCenterServlet extends HttpServlet {
 
 		boolean isERROR = TreeCollections.initTree(pluginList) ;
 		
-		log.info("Plugin加载情况： " + isERROR) ;
+		log.info("Plugin树生成： " + isERROR) ;
 	}
 	
 	/**

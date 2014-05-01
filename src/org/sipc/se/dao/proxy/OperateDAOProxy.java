@@ -17,6 +17,11 @@ public class OperateDAOProxy implements OperateDAO {
 		this.operate = new OperateDAOImpl(this.conn.getConnection()) ;
 	}
 	
+	public OperateDAOProxy(String url, String user,String password){
+		this.conn = new DataBaseConnection(url , user , password) ;
+		this.operate = new OperateDAOImpl(this.conn.getConnection()) ;
+	}
+	
 	@Override
 	public ResultSet doQuery(String sql) {
 		

@@ -1,4 +1,4 @@
-package org.sipc.se.bean;
+package org.sipc.se.bean; 
 
 import org.sipc.se.plugin.PluginImpl;
 

@@ -31,12 +31,37 @@ public class DataBaseConnection {
 	}
 	
 	public DataBaseConnection(){
-		checkDataBaseDriver() ;
-		checkDataBaseConnection() ;
+		if(!checkDataBaseDriver() ){
+			System.out.println("请查看数据库驱动程序！");
+		}else if(!checkDataBaseConnection()){
+			System.out.println("数据库未能连接，查看配置文件是否正确!") ;
+		}
+
+	}
+	
+	public DataBaseConnection(String url , String user , String passwd){
+		
+		if(!checkDataBaseDriver() ){
+			System.out.println("请查看数据库驱动程序！");
+		}else if(!changeConnection(url , user , passwd) ){
+			System.out.println("数据库未能连接，查看配置文件是否正确!") ;
+		}
 	}
 	
 	public Connection getConnection(){
 		return this.conn ;
+	}
+	
+	public boolean changeConnection(String url , String user , String passwd){
+		try{
+			DBURL = url ;
+			DBUSER = user ;
+			DBPASS = passwd ;
+			this.conn = DriverManager.getConnection(DBURL,DBUSER,DBPASS) ;
+		}catch(Exception e){
+			return false ;
+		}
+		return true ;
 	}
 	
 	public boolean checkDataBaseConnection(){

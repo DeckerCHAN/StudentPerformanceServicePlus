@@ -34,4 +34,9 @@ public class OperateFactory {
 	public OperateDAO getDAOInstance(){
 		return new OperateDAOProxy() ; 
 	}
+	
+	public OperateDAO getDAOInstance(String url , String user , String passwd){
+		return new OperateDAOProxy(url , user , passwd) ; 
+	}
+	
 }
