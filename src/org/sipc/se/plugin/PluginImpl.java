@@ -22,7 +22,7 @@ public abstract class PluginImpl implements Plugin , Comparable<PluginImpl> {
 	public abstract void getResponse(HttpServletRequest request,
 			HttpServletResponse response) ;
 	
-	public  Map<String, PluginImpl> getServer() {
+	public  Map<String, PluginImpl> getServerPluginList() {
 		return this.map;
 	}
 	
