@@ -79,10 +79,9 @@ public class JarFileContent {
 			//Load Plugin Instance
 			
 			PluginImpl plugin = JarFileLoad.jarFileLoad( filePath, fileName , ymlContent[1]) ;
+			plugin.setMap(pluginList) ;
 			
 			if(plugin.onEnable()){
-				
-				plugin.setMap(pluginList) ;
 				
 				//Add All Plugin Into List
 				pluginList.put(ymlContent[0] , plugin) ;
