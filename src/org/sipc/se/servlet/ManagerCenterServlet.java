@@ -19,7 +19,7 @@ import org.sipc.se.util.JarFileContent;
 import org.sipc.se.util.StaticValue;
 import org.sipc.se.util.TreeCollections;
 
-
+ 
 /** 
  * Servlet implementation class LoginServlet
  */
@@ -59,6 +59,7 @@ public class ManagerCenterServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		this.doPost(request, response) ;
@@ -68,6 +69,7 @@ public class ManagerCenterServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
@@ -96,7 +98,7 @@ public class ManagerCenterServlet extends HttpServlet {
 		//Sort allPlugin list
 
 		boolean isERROR = TreeCollections.initTree(pluginList) ;
-		
+		 
 		log.info("Plugin树生成： " + isERROR) ;
 	}
 	
@@ -113,16 +115,17 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		//First Page
 		if(path.equals("/") || path.equals("/*")){
-			response.getWriter().print("First Page!!") ;
+			response.sendRedirect("Essentials/Default.html") ;
+			return ;
+		}
+		
+		//Router
+		PluginImpl plugin = PluginTree.getInstance().getPluginByPath(path) ;
+		if(plugin != null){
+			plugin.getResponse(request, response) ;
 		}else{
+			response.sendError(404) ;
 			
-			//Router
-			PluginImpl plugin = PluginTree.getInstance().getPluginByPath(path) ;
-			if(plugin != null){
-				plugin.getResponse(request, response) ;
-			}else{
-				response.sendError(404) ;
-			}
 		}
 	}
 	
