@@ -115,7 +115,6 @@ public class ManagerCenterServlet extends HttpServlet {
 		
 		//First Page
 		if(path.equals("/") || path.equals("/*")){
-			response.sendRedirect("Essentials/Default.html") ;
 			return ;
 		}
 		
