@@ -20,7 +20,7 @@ import org.sipc.se.util.StaticValue;
 import org.sipc.se.util.TreeCollections;
 
  
-/** 
+/**  
  * Servlet implementation class LoginServlet
  */
 public class ManagerCenterServlet extends HttpServlet {
@@ -47,8 +47,8 @@ public class ManagerCenterServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		try {
-			this.loadAllPlugin(config) ;
 			this.checkDBInfo(config) ;
+			this.loadAllPlugin(config) ;
 			this.getServer();
 		} catch (ClassNotFoundException | InstantiationException
 				 | IllegalAccessException | IOException e) {
